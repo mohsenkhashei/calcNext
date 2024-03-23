@@ -1,131 +1,63 @@
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+"use client"
+import '../styles/global.css';
+import { Inter } from 'next/font/google'
+import { useState } from 'react'
 
 export default function Home() {
+  const [result, setResult] = useState('');
+  const [expression, setExpression] = useState('');
+
+  const handleButtonClick = (value) => {
+    if (value === '=') {
+      try {
+        setResult(eval(expression).toString());
+      } catch (error) {
+        setResult('Error');
+      }
+    } else if (value === 'C') {
+      setResult('');
+      setExpression('');
+    } else {
+      setExpression((prevExpression) => prevExpression + value);
+    }
+  };
+
+  const buttons = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+',
+    'C'
+  ];
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+    <main className="flex min-h-screen flex-col items-center p-24">
+      <h1 className="text-4xl font-bold mb-10">Calculator</h1>
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <input
+          type="text"
+          className="w-full mb-2 text-3xl border-b-2 border-gray-400 focus:outline-none"
+          value={expression}
+          readOnly
+        />
+        <input
+          type="text"
+          className="w-full text-4xl font-bold mb-4 focus:outline-none"
+          value={result}
+          readOnly
+        />
+        <div className="grid grid-cols-4 gap-2">
+          {buttons.map((btn) => (
+            <button
+              key={btn}
+              onClick={() => handleButtonClick(btn)}
+              className="text-xl bg-gray-300 hover:bg-gray-400 p-2 rounded-lg"
+            >
+              {btn}
+            </button>
+          ))}
         </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className={styles.logo} />
-        </a>
-      </footer>
-
-      <style jsx>{`
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        footer img {
-          margin-left: 0.5rem;
-        }
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          text-decoration: none;
-          color: inherit;
-        }
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family:
-            Menlo,
-            Monaco,
-            Lucida Console,
-            Liberation Mono,
-            DejaVu Sans Mono,
-            Bitstream Vera Sans Mono,
-            Courier New,
-            monospace;
-        }
-      `}</style>
-
-      <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family:
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
-        }
-        * {
-          box-sizing: border-box;
-        }
-      `}</style>
-    </div>
-  );
+      </div>
+    </main>
+  )
 }
